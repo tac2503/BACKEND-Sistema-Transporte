@@ -14,4 +14,5 @@ class Cliente(Base):
     telefono = Column(String, nullable=False)
     direccion = Column(String, nullable=False)
 
+    tarjeta= relationship("Tarjeta", back_populates="cliente",cascade="all, delete",passive_deletes=True)
     

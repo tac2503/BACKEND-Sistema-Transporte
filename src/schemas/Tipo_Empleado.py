@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
 
-class AministradorCreate(BaseModel):
+class Tipo_EmpleadoCreate(BaseModel):
     id: int = Field(..., example=1)
     nombre_Tipo: str = Field(..., example="Conductor")
     

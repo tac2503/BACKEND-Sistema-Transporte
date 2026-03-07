@@ -11,4 +11,4 @@ class Ruta(Base):
     nombre = Column(String, nullable=False)
     descripcion = Column(String, nullable=False)
 
-    
+    vehiculos= relationship("Vehiculo", back_populates="ruta", cascade="all, delete", passive_deletes=True)

@@ -18,7 +18,7 @@ class Tarjeta(Base):
     )
     documento_cliente = Column(
         String,
-        ForeignKey("clientes.documento"),
+        ForeignKey("clientes.documento",ondelete="CASCADE"),
         nullable=False,
         unique=True,
     )

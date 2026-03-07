@@ -13,6 +13,6 @@ class Empleado(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     telefono = Column(String, nullable=False)
     direccion = Column(String, nullable=False)
-    Tipo_Empleado_id = Column(Integer, ForeignKey("tipos_empleados.id"), nullable=False)
+    Tipo_Empleado_id = Column(Integer, ForeignKey("tipos_empleados.id",ondelete="CASCADE"), nullable=False)
 
     tipo_empleado = relationship("Tipo_Empleado", back_populates="empleados")

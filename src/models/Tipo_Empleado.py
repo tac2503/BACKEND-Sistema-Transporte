@@ -8,5 +8,6 @@ class Tipo_Empleado(Base):
     id = Column(Integer, primary_key=True,  index=True, autoincrement=True)
     nombre_Tipo = Column(String, nullable=False)
 
+    empleados = relationship("Empleado", back_populates="tipo_empleado", cascade="all, delete",passive_deletes=True)
     
     
