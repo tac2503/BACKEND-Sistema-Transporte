@@ -1,0 +1,53 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from src.schemas import VehiculoResponse, VehiculoCreate
+from src.database.config import get_db
+from src.models import Vehiculo
+
+router = APIRouter(
+    prefix="/vehiculos",
+    tags=["vehiculos"])
+
+@router.post(
+    "/", response_model=VehiculoResponse, status_code=status.HTTP_201_CREATED
+)
+def create_vehiculo(vehiculo: VehiculoCreate, db: Session = Depends(get_db)):
+    
+    exists = db.query(Vehiculo).filter(Vehiculo.placa == vehiculo.placa).first()
+    if exists:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="El vehículo con esa placa ya está registrado.")
+    
+    nuevo_vehiculo = Vehiculo(
+        placa=vehiculo.placa,
+        marca=vehiculo.marca,
+        ruta_id=vehiculo.ruta_id
+    )
+    db.add(nuevo_vehiculo)
+    db.commit()
+    db.refresh(nuevo_vehiculo)
+    return nuevo_vehiculo
+
+@router.get(
+    "/", response_model=list[VehiculoResponse], status_code=status.HTTP_200_OK
+)
+def get_vehiculos(db: Session = Depends(get_db)):
+    vehiculos = db.query(Vehiculo).all()
+    return vehiculos
+
+@router.get(
+    "/{placa}", response_model=VehiculoResponse, status_code=status.HTTP_200_OK
+)
+def get_vehiculo(placa: str, db: Session = Depends(get_db)):
+    vehiculo = db.query(Vehiculo).filter(Vehiculo.placa == placa).first()
+    if not vehiculo:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="El vehículo no fue encontrado.")
+    return vehiculo
+
+@router.delete("/{placa}", status_code=status.HTTP_200_OK)
+def delete_vehiculo(placa: str, db: Session = Depends(get_db)):
+    vehiculo = db.query(Vehiculo).filter(Vehiculo.placa == placa).first()
+    if not vehiculo:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="El vehículo no fue encontrado.")
+    db.delete(vehiculo)
+    db.commit()
+    return {"detail": "El vehículo fue eliminado."}

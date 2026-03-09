@@ -1,6 +1,11 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
 
 class Tipo_EmpleadoCreate(BaseModel):
-    id: int = Field(..., example=1)
     nombre_Tipo: str = Field(..., example="Conductor")
-    
+
+class Tipo_EmpleadoResponse(BaseModel):
+    id: int
+    nombre_Tipo: str
+
+    class Config:
+        from_attributes = True

@@ -3,7 +3,12 @@ import threading
 import time
 from app import desplegar_uvicorn
 
-from src.crud import crear_administrador
+from src.crud import (
+    crear_administrador,
+    crear_vehiculo, obtener_vehiculos, obtener_vehiculo, eliminar_vehiculo,
+    crear_tarjeta, obtener_tarjetas, obtener_tarjeta, eliminar_tarjeta,
+    crear_tipo_empleado, obtener_tipos_empleados, obtener_tipo_empleado, eliminar_tipo_empleado
+)
 from src.database.config import SessionLocal
 from src.models import Administrador
 
@@ -32,7 +37,10 @@ def menu():
                     print("6. Ver vehículos")
                     print("7. Ver rutas")
                     print("8. Registrar empleado")
-                    print("9. Salir")
+                    print("9. Crear tarjeta")
+                    print("10. Crear tipo de empleado")
+                    print("11. Crear vehículo")
+                    print("12. Salir")
 
                     admin_opcion = input("Ingrese su opción: ")
             
@@ -49,21 +57,56 @@ def menu():
                                 print(f"Administrador creado: {admin_nuevo}")
                             
                             
+                        case "2":  
+                            pass
                         case "3":  
                             pass
                         case "4":
-                            pass
+                            tarjetas = obtener_tarjetas()
+                            if tarjetas:
+                                print("\n--- TARJETAS REGISTRADAS ---")
+                                for tarjeta in tarjetas:
+                                    print(f"Número: {tarjeta['numero_tarjeta']}, Cliente: {tarjeta['documento_cliente']}")
+                            else:
+                                print("No hay tarjetas registradas.")
                         case "5":
-                            pass
+                            tipos = obtener_tipos_empleados()
+                            if tipos:
+                                print("\n--- TIPOS DE EMPLEADO ---")
+                                for tipo in tipos:
+                                    print(f"ID: {tipo['id']}, Nombre: {tipo['nombre_Tipo']}")
+                            else:
+                                print("No hay tipos de empleado registrados.")
                         case "6":
-                            pass
+                            vehiculos = obtener_vehiculos()
+                            if vehiculos:
+                                print("\n--- VEHÍCULOS REGISTRADOS ---")
+                                for vehiculo in vehiculos:
+                                    print(f"Placa: {vehiculo['placa']}, Marca: {vehiculo['marca']}, Ruta ID: {vehiculo['ruta_id']}")
+                            else:
+                                print("No hay vehículos registrados.")
                         case "7":
                             pass
                         case "8":
                             pass
                         case "9":
+                            documento_cliente = input("Documento del cliente: ")
+                            tarjeta_nueva = crear_tarjeta(documento_cliente)
+                            print(f"Tarjeta creada: {tarjeta_nueva}")
+                        case "10":
+                            nombre_tipo = input("Nombre del tipo de empleado: ")
+                            tipo_nuevo = crear_tipo_empleado(nombre_tipo)
+                            print(f"Tipo de empleado creado: {tipo_nuevo}")
+                        case "11":
+                            placa = input("Placa del vehículo: ")
+                            marca = input("Marca del vehículo: ")
+                            ruta_id = input("ID de la ruta: ")
+                            vehiculo_nuevo = crear_vehiculo(placa, marca, ruta_id)
+                            print(f"Vehículo creado: {vehiculo_nuevo}")
+                        case "12":
                             print("Saliendo del menú de administrador...")
                             break
+
         elif opcion == "2":
             print("Bienvenido, cliente")
             
@@ -89,11 +132,19 @@ def menu():
                     case "3":  
                         pass
                     case "4":
-                        pass
+                        numero_tarjeta = input("Número de tarjeta: ")
+                        tarjeta = obtener_tarjeta(numero_tarjeta)
+                        print(f"Saldo actual: {tarjeta.get('saldo', 'No disponible')}")
                     case "5":
                         pass
                     case "6":
-                        pass
+                        vehiculos = obtener_vehiculos()
+                        if vehiculos:
+                            print("\n--- VEHÍCULOS DISPONIBLES ---")
+                            for vehiculo in vehiculos:
+                                print(f"Placa: {vehiculo['placa']}, Marca: {vehiculo['marca']}")
+                        else:
+                            print("No hay vehículos disponibles.")
                     case "7":
                         print("Saliendo del menú de cliente...")
                         break
