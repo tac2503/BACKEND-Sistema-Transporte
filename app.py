@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from src.database.config import create_tables
-from src.routers import  administradores_router
+from src.routers import administradores_router, tarjeta_router, tipo_empleado_router, vehiculos_router
 import uvicorn
 
 @asynccontextmanager
@@ -17,6 +17,9 @@ app = FastAPI(
 )
 
 app.include_router(administradores_router)
+app.include_router(tarjeta_router)
+app.include_router(tipo_empleado_router)
+app.include_router(vehiculos_router)
 
 def desplegar_uvicorn():
     uvicorn.run(app, host="127.0.0.1", port=8000)
