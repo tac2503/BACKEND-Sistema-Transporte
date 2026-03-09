@@ -2,9 +2,9 @@ from src.schemas.Administradores import AdministradorCreate,AdministradorRespons
 from src.schemas.Cliente import ClienteCreate
 from src.schemas.Empleado import EmpleadoCreate
 from src.schemas.Rutas import RutaCreate
-from src.schemas.Tarjeta import TarjetaCreate
-from src.schemas.Tipo_Empleado import Tipo_EmpleadoCreate
-from src.schemas.Vehiculos import VehiculoCreate
+from src.schemas.Tarjeta import TarjetaCreate, TarjetaResponse
+from src.schemas.Tipo_Empleado import Tipo_EmpleadoCreate, Tipo_EmpleadoResponse
+from src.schemas.Vehiculos import VehiculoCreate, VehiculoResponse
 
 __all__ = [
     "AdministradorCreate",
@@ -13,6 +13,9 @@ __all__ = [
     "EmpleadoCreate",
     "RutaCreate",
     "TarjetaCreate",
+    "TarjetaResponse",
     "Tipo_EmpleadoCreate",
-    "VehiculoCreate"
+    "Tipo_EmpleadoResponse",
+    "VehiculoCreate",
+    "VehiculoResponse"
 ]

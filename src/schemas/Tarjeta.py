@@ -1,6 +1,12 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
 
 class TarjetaCreate(BaseModel):
-    numero: str = Field(..., example="1234567890123456")
     documento_cliente: str = Field(..., example="12345678")
 
+class TarjetaResponse(BaseModel):
+    numero_tarjeta: str
+    documento_cliente: str
+    saldo: int
+
+    class Config:
+        from_attributes = True
