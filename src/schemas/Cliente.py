@@ -6,3 +6,14 @@ class ClienteCreate(BaseModel):
     email: EmailStr = Field(..., example="hola@gmail.com")
     telefono: str = Field(..., example="1234567890")
     direccion: str = Field(..., example="Calle Falsa 123")
+
+class ClienteResponse(BaseModel):
+    
+    documento: str
+    nombre: str
+    email: EmailStr
+    telefono: str
+    direccion: str
+
+    class Config:
+        from_attributes = True

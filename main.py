@@ -7,7 +7,9 @@ from src.crud import (
     crear_administrador,
     crear_vehiculo, obtener_vehiculos, obtener_vehiculo, eliminar_vehiculo,
     crear_tarjeta, obtener_tarjetas, obtener_tarjeta, eliminar_tarjeta,
-    crear_tipo_empleado, obtener_tipos_empleados, obtener_tipo_empleado, eliminar_tipo_empleado
+    crear_tipo_empleado, obtener_tipos_empleados, obtener_tipo_empleado, eliminar_tipo_empleado,
+    crear_cliente, obtener_clientes, obtener_cliente, eliminar_cliente,
+    crear_empleado, obtener_empleados, obtener_empleado, eliminar_empleado
 )
 from src.database.config import SessionLocal
 from src.models import Administrador
@@ -58,9 +60,21 @@ def menu():
                             
                             
                         case "2":  
-                            pass
+                            clientes = obtener_clientes()
+                            if clientes:
+                                print("\n--- CLIENTES REGISTRADOS ---")
+                                for cliente in clientes:
+                                    print(f"Documento: {cliente['documento']}, Nombre: {cliente['nombre']}, Email: {cliente['email']}")
+                            else:
+                                print("No hay clientes registrados.")
                         case "3":  
-                            pass
+                            empleados = obtener_empleados()
+                            if empleados:
+                                print("\n--- EMPLEADOS REGISTRADOS ---")
+                                for empleado in empleados:
+                                    print(f"Documento: {empleado['documento']}, Nombre: {empleado['nombre']}, Email: {empleado['email']}")
+                            else:
+                                print("No hay empleados registrados.")
                         case "4":
                             tarjetas = obtener_tarjetas()
                             if tarjetas:
@@ -88,7 +102,14 @@ def menu():
                         case "7":
                             pass
                         case "8":
-                            pass
+                            documento = input("Documento del empleado: ")
+                            nombre = input("Nombre del empleado: ")
+                            email = input("Email del empleado: ")
+                            telefono = input("Teléfono del empleado: ")
+                            direccion = input("Dirección del empleado: ")
+                            tipo_empleado_id = int(input("ID del tipo de empleado: "))
+                            empleado_nuevo = crear_empleado(documento, nombre, email, telefono, direccion, tipo_empleado_id)
+                            print(f"Empleado creado: {empleado_nuevo}")
                         case "9":
                             documento_cliente = input("Documento del cliente: ")
                             tarjeta_nueva = crear_tarjeta(documento_cliente)
@@ -126,9 +147,25 @@ def menu():
             
                 match cliente_opcion:
                     case "1":
-                        pass
+                        documento = input("Documento: ")
+                        nombre = input("Nombre: ")
+                        email = input("Email: ")
+                        telefono = input("Teléfono: ")
+                        direccion = input("Dirección: ")
+                        cliente_nuevo = crear_cliente(documento, nombre, email, telefono, direccion)
+                        print(f"Cliente creado: {cliente_nuevo}")
                     case "2":
-                        pass
+                        documento = input("Documento del cliente: ")
+                        cliente = obtener_cliente(documento)
+                        if cliente:
+                            print(f"\n--- INFORMACIÓN DEL CLIENTE ---")
+                            print(f"Documento: {cliente['documento']}")
+                            print(f"Nombre: {cliente['nombre']}")
+                            print(f"Email: {cliente['email']}")
+                            print(f"Teléfono: {cliente['telefono']}")
+                            print(f"Dirección: {cliente['direccion']}")
+                        else:
+                            print("Cliente no encontrado.")
                     case "3":  
                         pass
                     case "4":
