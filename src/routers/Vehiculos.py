@@ -12,6 +12,7 @@ router = APIRouter(
     "/", response_model=VehiculoResponse, status_code=status.HTTP_201_CREATED
 )
 def create_vehiculo(vehiculo: VehiculoCreate, db: Session = Depends(get_db)):
+    """Registra un vehiculo nuevo validando que la placa no exista."""
     
     exists = db.query(Vehiculo).filter(Vehiculo.placa == vehiculo.placa).first()
     if exists:
@@ -31,6 +32,7 @@ def create_vehiculo(vehiculo: VehiculoCreate, db: Session = Depends(get_db)):
     "/", response_model=list[VehiculoResponse], status_code=status.HTTP_200_OK
 )
 def get_vehiculos(db: Session = Depends(get_db)):
+    """Obtiene todos los vehiculos registrados en el sistema."""
     vehiculos = db.query(Vehiculo).all()
     return vehiculos
 
@@ -38,6 +40,7 @@ def get_vehiculos(db: Session = Depends(get_db)):
     "/{placa}", response_model=VehiculoResponse, status_code=status.HTTP_200_OK
 )
 def get_vehiculo(placa: str, db: Session = Depends(get_db)):
+    """Obtiene un vehiculo especifico por su placa."""
     vehiculo = db.query(Vehiculo).filter(Vehiculo.placa == placa).first()
     if not vehiculo:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="El vehículo no fue encontrado.")
@@ -45,6 +48,7 @@ def get_vehiculo(placa: str, db: Session = Depends(get_db)):
 
 @router.delete("/{placa}", status_code=status.HTTP_200_OK)
 def delete_vehiculo(placa: str, db: Session = Depends(get_db)):
+    """Elimina un vehiculo existente por placa."""
     vehiculo = db.query(Vehiculo).filter(Vehiculo.placa == placa).first()
     if not vehiculo:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="El vehículo no fue encontrado.")
