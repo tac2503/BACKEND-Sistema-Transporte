@@ -8,6 +8,7 @@ from src.database.config import Base, SessionLocal
 
 
 class Tarjeta(Base):
+    """Modelo de Tarjeta de Transporte"""
     __tablename__ = "tarjetas"
     id = Column(String(36),  index=True, default=lambda: str(uuid.uuid4()))
     numero_tarjeta = Column(
@@ -28,6 +29,7 @@ class Tarjeta(Base):
     
     @staticmethod
     def encontrar_numero() -> str:
+        """Genera un número de tarjeta único de 16 dígitos."""
         while True:
             numero = ""
             for _ in range(16):

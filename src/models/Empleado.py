@@ -5,6 +5,9 @@ from sqlalchemy.orm import relationship
 from src.database.config import Base
 
 class Empleado(Base):
+    """Modelo de Empleado que representa a los empleados del sistema de transporte.
+    Cada empleado tiene un documento único, nombre, email, teléfono, dirección y un tipo de empleado asociado.
+    """
     __tablename__ = "empleados"
 
     id = Column(String(36),  index=True, default=lambda: str(uuid.uuid4()))

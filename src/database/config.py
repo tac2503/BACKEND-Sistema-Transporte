@@ -11,6 +11,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 def get_db():
+    """Provee una sesion de base de datos por solicitud y la cierra al finalizar."""
     db = SessionLocal()
     try:
         yield db
@@ -18,7 +19,8 @@ def get_db():
         db.close()
 
 def create_tables():
-    # Importar todos los modelos para que se registren en Base.metadata
+    """Crea las tablas definidas en los modelos registrados en SQLAlchemy."""
+    
     from src import models
     
     try:

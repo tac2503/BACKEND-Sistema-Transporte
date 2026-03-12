@@ -5,6 +5,8 @@ from sqlalchemy.orm import relationship
 from src.database.config import Base
 
 class Cliente(Base):
+    """Modelo de Cliente que representa a los clientes del sistema de transporte.
+    Cada cliente tiene un documento único, nombre, email, teléfono y dirección."""
     __tablename__ = "clientes"
 
     id = Column(String(36),  index=True, default=lambda: str(uuid.uuid4()))
