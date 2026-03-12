@@ -9,12 +9,14 @@ from src.crud import (
     crear_tarjeta, obtener_tarjetas, obtener_tarjeta, eliminar_tarjeta,
     crear_tipo_empleado, obtener_tipos_empleados, obtener_tipo_empleado, eliminar_tipo_empleado,
     crear_cliente, obtener_clientes, obtener_cliente, eliminar_cliente,
-    crear_empleado, obtener_empleados, obtener_empleado, eliminar_empleado
+    crear_empleado, obtener_empleados, obtener_empleado, eliminar_empleado,
+    crear_ruta, obtener_rutas, eliminar_ruta, actualizar_saldo
 )
 from src.database.config import SessionLocal
 from src.models import Administrador
 
 def menu():
+    """Muestra y gestiona el menu interactivo para administradores y clientes."""
     while True:
         print("1 si es administrador, 2 si es cliente, 0 para salir /n")
 
@@ -100,7 +102,13 @@ def menu():
                             else:
                                 print("No hay vehículos registrados.")
                         case "7":
-                            pass
+                            rutas = obtener_rutas()
+                            if rutas:
+                                print("\n--- RUTAS REGISTRADAS ---")
+                                for ruta in rutas:
+                                    print(f"ID: {ruta['id']}, Nombre: {ruta['nombre']}, Descripción: {ruta['descripcion']}")
+                            else:
+                                print("No hay rutas registradas.")
                         case "8":
                             documento = input("Documento del empleado: ")
                             nombre = input("Nombre del empleado: ")
@@ -167,13 +175,22 @@ def menu():
                         else:
                             print("Cliente no encontrado.")
                     case "3":  
-                        pass
+                        numero_tarjeta = input("Número de tarjeta: ")
+                        monto = int(input("Monto a recargar: "))
+                        nuevo_saldo = actualizar_saldo(numero_tarjeta, monto)
+                        print(f"Nuevo saldo: {nuevo_saldo}")
                     case "4":
                         numero_tarjeta = input("Número de tarjeta: ")
                         tarjeta = obtener_tarjeta(numero_tarjeta)
                         print(f"Saldo actual: {tarjeta.get('saldo', 'No disponible')}")
                     case "5":
-                        pass
+                        rutas = obtener_rutas()
+                        if rutas:
+                            print("\n--- RUTAS REGISTRADAS ---")
+                            for ruta in rutas:
+                                print(f"ID: {ruta['id']}, Nombre: {ruta['nombre']}, Descripción: {ruta['descripcion']}")
+                        else:
+                            print("No hay rutas registradas.")
                     case "6":
                         vehiculos = obtener_vehiculos()
                         if vehiculos:

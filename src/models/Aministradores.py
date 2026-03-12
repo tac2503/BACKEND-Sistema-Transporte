@@ -5,6 +5,10 @@ from sqlalchemy.orm import relationship
 from src.database.config import Base
 
 class Administrador(Base):
+    """
+    Modelo de Administrador que representa a los administradores del sistema de transporte.
+    Cada administrador tiene un documento único, nombre, email, teléfono y dirección.
+    """
     __tablename__ = "administradores"
 
     id = Column(String(36),  index=True, default=lambda: str(uuid.uuid4()))

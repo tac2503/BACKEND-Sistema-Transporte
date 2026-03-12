@@ -12,6 +12,7 @@ router = APIRouter(
     "/", response_model=AdministradorResponse,status_code=status.HTTP_201_CREATED
 )
 def create_administrador(administrador: AdministradorCreate, db: Session = Depends(get_db)):
+    """Crea un nuevo administrador en la base de datos."""
     
     exists = db.query(Administrador).filter(Administrador.documento == administrador.documento).first()
     if exists:
@@ -32,11 +33,13 @@ def create_administrador(administrador: AdministradorCreate, db: Session = Depen
     "/", response_model=list[AdministradorResponse],status_code=status.HTTP_200_OK
 )
 def get_administradores(db: Session = Depends(get_db)):
+    """Obtiene todos los administradores de la base de datos."""
     administradores = db.query(Administrador).all()
     return administradores
 
 @router.delete("/{documento}", status_code=status.HTTP_200_OK)
 def delete_administrador(documento: str, db: Session = Depends(get_db)):
+    """Elimina un administrador de la base de datos por su documento."""
     administrador = db.query(Administrador).filter(Administrador.documento == documento).first()
     if not administrador:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="El administrador no fue encontrado.")

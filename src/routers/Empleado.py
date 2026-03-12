@@ -12,6 +12,7 @@ router = APIRouter(
     "/", response_model=EmpleadoResponse, status_code=status.HTTP_201_CREATED
 )
 def create_empleado(empleado: EmpleadoCreate, db: Session = Depends(get_db)):
+    """Crea un empleado nuevo y valida que el documento sea unico."""
     
     exists = db.query(Empleado).filter(Empleado.documento == empleado.documento).first()
     if exists:
@@ -34,6 +35,7 @@ def create_empleado(empleado: EmpleadoCreate, db: Session = Depends(get_db)):
     "/", response_model=list[EmpleadoResponse], status_code=status.HTTP_200_OK
 )
 def get_empleados(db: Session = Depends(get_db)):
+    """Retorna todos los empleados registrados."""
     empleados = db.query(Empleado).all()
     return empleados
 
@@ -41,6 +43,7 @@ def get_empleados(db: Session = Depends(get_db)):
     "/{documento}", response_model=EmpleadoResponse, status_code=status.HTTP_200_OK
 )
 def get_empleado(documento: str, db: Session = Depends(get_db)):
+    """Busca un empleado por documento."""
     empleado = db.query(Empleado).filter(Empleado.documento == documento).first()
     if not empleado:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="El empleado no fue encontrado.")
@@ -48,6 +51,7 @@ def get_empleado(documento: str, db: Session = Depends(get_db)):
 
 @router.delete("/{documento}", status_code=status.HTTP_200_OK)
 def delete_empleado(documento: str, db: Session = Depends(get_db)):
+    """Elimina un empleado por documento si existe."""
     empleado = db.query(Empleado).filter(Empleado.documento == documento).first()
     if not empleado:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="El empleado no fue encontrado.")

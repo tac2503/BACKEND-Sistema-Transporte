@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from src.database.config import Base
 
 class Tipo_Empleado(Base):
+    """Modelo de Tipo de Empleado"""
     __tablename__ = "tipos_empleados"
 
     id = Column(Integer, primary_key=True,  index=True, autoincrement=True)
