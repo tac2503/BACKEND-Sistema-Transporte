@@ -61,7 +61,8 @@ Thumbs.db
 .AppleDouble
 .LSOverride
 
-# Archivos de configuración local/secretos (EXCEPTO .env principal)
+# Archivos de configuración local/secretos
+.env
 .env.local
 .env.*.local
 .env.password

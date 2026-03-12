@@ -12,6 +12,7 @@ router = APIRouter(
     "/", response_model=Tipo_EmpleadoResponse, status_code=status.HTTP_201_CREATED
 )
 def create_tipo_empleado(tipo_empleado: Tipo_EmpleadoCreate, db: Session = Depends(get_db)):
+    """Crea un tipo de empleado nuevo si el nombre no esta registrado."""
     
     exists = db.query(Tipo_Empleado).filter(Tipo_Empleado.nombre_Tipo == tipo_empleado.nombre_Tipo).first()
     if exists:
@@ -29,6 +30,7 @@ def create_tipo_empleado(tipo_empleado: Tipo_EmpleadoCreate, db: Session = Depen
     "/", response_model=list[Tipo_EmpleadoResponse], status_code=status.HTTP_200_OK
 )
 def get_tipos_empleados(db: Session = Depends(get_db)):
+    """Lista todos los tipos de empleado disponibles."""
     tipos_empleados = db.query(Tipo_Empleado).all()
     return tipos_empleados
 
@@ -36,6 +38,7 @@ def get_tipos_empleados(db: Session = Depends(get_db)):
     "/{tipo_empleado_id}", response_model=Tipo_EmpleadoResponse, status_code=status.HTTP_200_OK
 )
 def get_tipo_empleado(tipo_empleado_id: int, db: Session = Depends(get_db)):
+    """Obtiene un tipo de empleado por su identificador."""
     tipo_empleado = db.query(Tipo_Empleado).filter(Tipo_Empleado.id == tipo_empleado_id).first()
     if not tipo_empleado:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="El tipo de empleado no fue encontrado.")
@@ -43,6 +46,7 @@ def get_tipo_empleado(tipo_empleado_id: int, db: Session = Depends(get_db)):
 
 @router.delete("/{tipo_empleado_id}", status_code=status.HTTP_200_OK)
 def delete_tipo_empleado(tipo_empleado_id: int, db: Session = Depends(get_db)):
+    """Elimina un tipo de empleado por ID."""
     tipo_empleado = db.query(Tipo_Empleado).filter(Tipo_Empleado.id == tipo_empleado_id).first()
     if not tipo_empleado:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="El tipo de empleado no fue encontrado.")
