@@ -1,14 +1,6 @@
-import os
-import sys
-from pathlib import Path
-
 from dotenv import load_dotenv
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-
-load_dotenv(PROJECT_ROOT / ".env")
+load_dotenv()
 
 from sqlalchemy.exc import OperationalError
 
@@ -174,7 +166,7 @@ def main():
         db = SessionLocal()
         try:
             print("Sembrando admin si no existe...")
-            admin = get_or_create_admin(db)
+            get_or_create_admin(db)
             print("Sembrando tipos de empleado...")
             seed_tipos_empleado(db)
             print("Sembrando empleados...")

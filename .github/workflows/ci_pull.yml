@@ -65,10 +65,10 @@ jobs:
         run: pip-audit
 
       - name: Crear/actualizar BD (migración)
-        run: python src/database/migrate.py
+        run: python -m src.database.migrate
 
       - name: Seed (datos iniciales)
-        run: python src/database/seed.py
+        run: python -m src.database.seed
 
       - name: Pruebas (smoke test)
         run: |

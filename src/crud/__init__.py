@@ -43,6 +43,7 @@ __all__ = [
     "obtener_tarjetas",
     "obtener_tarjeta",
     "eliminar_tarjeta",
+    "actualizar_saldo",
     "crear_tipo_empleado",
     "obtener_tipos_empleados",
     "obtener_tipo_empleado",

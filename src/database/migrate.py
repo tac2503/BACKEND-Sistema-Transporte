@@ -1,28 +1,16 @@
-import os
-import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-
-load_dotenv(PROJECT_ROOT / ".env")
-
 from sqlalchemy import text
 from sqlalchemy.exc import OperationalError
 
-import src.models.Aministradores
-import src.models.Empleado
-import src.models.Tipo_Empleado
-import src.models.Rutas
-import src.models.Vehiculos
-import src.models.Cliente
-import src.models.Tarjeta
+import src.models  # noqa: F401
 from src.database.config import engine, create_tables
 
 MIGRATIONS_DIR = Path(__file__).resolve().parent / "migrations"
+
+load_dotenv()
 
 
 def ensure_migrations_table(conn):
