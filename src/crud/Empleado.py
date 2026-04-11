@@ -1,7 +1,14 @@
 from src.crud.cliente import _get, _post, _delete
 
 
-def crear_empleado(documento: str, nombre: str, email: str, telefono: str, direccion: str, Tipo_Empleado_id: int):
+def crear_empleado(
+    documento: str,
+    nombre: str,
+    email: str,
+    telefono: str,
+    direccion: str,
+    Tipo_Empleado_id: int,
+):
     """Crea un empleado a traves del endpoint de empleados."""
     payload = {
         "documento": documento,
@@ -9,7 +16,7 @@ def crear_empleado(documento: str, nombre: str, email: str, telefono: str, direc
         "email": email,
         "telefono": telefono,
         "direccion": direccion,
-        "Tipo_Empleado_id": Tipo_Empleado_id
+        "Tipo_Empleado_id": Tipo_Empleado_id,
     }
     return _post("/empleados/", json=payload)
 
