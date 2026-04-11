@@ -9,8 +9,9 @@ from src.database.config import Base, SessionLocal
 
 class Tarjeta(Base):
     """Modelo de Tarjeta de Transporte"""
+
     __tablename__ = "tarjetas"
-    id = Column(String(36),  index=True, default=lambda: str(uuid.uuid4()))
+    id = Column(String(36), index=True, default=lambda: str(uuid.uuid4()))
     numero_tarjeta = Column(
         String(16),
         primary_key=True,
@@ -19,14 +20,14 @@ class Tarjeta(Base):
     )
     documento_cliente = Column(
         String,
-        ForeignKey("clientes.documento",ondelete="CASCADE"),
+        ForeignKey("clientes.documento", ondelete="CASCADE"),
         nullable=False,
         unique=True,
     )
-    saldo = Column(Integer, nullable=False,default=0)
+    saldo = Column(Integer, nullable=False, default=0)
 
     cliente = relationship("Cliente", back_populates="tarjeta")
-    
+
     @staticmethod
     def encontrar_numero() -> str:
         """Genera un número de tarjeta único de 16 dígitos."""
@@ -38,9 +39,7 @@ class Tarjeta(Base):
             db = SessionLocal()
             try:
                 existe = (
-                    db.query(Tarjeta)
-                    .filter(Tarjeta.numero_tarjeta == numero)
-                    .first()
+                    db.query(Tarjeta).filter(Tarjeta.numero_tarjeta == numero).first()
                 )
             finally:
                 db.close()
