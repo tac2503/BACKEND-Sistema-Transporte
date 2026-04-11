@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from src.database.config import create_tables
-from src.routers import administradores_router, tarjeta_router, tipo_empleado_router, vehiculos_router, cliente_router, empleado_router, rutas_router
+from src.routers import auth_router, administradores_router, tarjeta_router, tipo_empleado_router, vehiculos_router, cliente_router, empleado_router, rutas_router
 import uvicorn
 
 @asynccontextmanager
@@ -17,6 +17,7 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+app.include_router(auth_router)
 app.include_router(administradores_router)
 app.include_router(cliente_router)
 app.include_router(empleado_router)
