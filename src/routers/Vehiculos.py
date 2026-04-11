@@ -1,12 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from src.core.security import get_current_admin
 from src.schemas import VehiculoResponse, VehiculoCreate
 from src.database.config import get_db
 from src.models import Vehiculo
 
 router = APIRouter(
     prefix="/vehiculos",
-    tags=["vehiculos"])
+    tags=["vehiculos"],
+    dependencies=[Depends(get_current_admin)])
 
 @router.post(
     "/", response_model=VehiculoResponse, status_code=status.HTTP_201_CREATED

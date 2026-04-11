@@ -1,12 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from src.core.security import get_current_admin
 from src.schemas import EmpleadoResponse, EmpleadoCreate
 from src.database.config import get_db
 from src.models import Empleado
 
 router = APIRouter(
     prefix="/empleados",
-    tags=["empleados"])
+    tags=["empleados"],
+    dependencies=[Depends(get_current_admin)])
 
 @router.post(
     "/", response_model=EmpleadoResponse, status_code=status.HTTP_201_CREATED

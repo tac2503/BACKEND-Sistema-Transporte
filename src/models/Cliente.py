@@ -11,6 +11,7 @@ class Cliente(Base):
 
     id = Column(String(36),  index=True, default=lambda: str(uuid.uuid4()))
     documento = Column(String,primary_key=True, index=True)
+    contrasena = Column(String, nullable=False)
     nombre = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     telefono = Column(String, nullable=False)

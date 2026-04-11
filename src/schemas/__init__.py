@@ -1,4 +1,5 @@
 from src.schemas.Administradores import AdministradorCreate,AdministradorResponse
+from src.schemas.Auth import LoginRequest, TokenResponse
 from src.schemas.Cliente import ClienteCreate, ClienteResponse
 from src.schemas.Empleado import EmpleadoCreate, EmpleadoResponse
 from src.schemas.Rutas import RutaCreate, RutaResponse
@@ -10,6 +11,8 @@ from src.schemas.Vehiculos import VehiculoCreate, VehiculoResponse
 __all__ = [
     "AdministradorCreate",
     "AdministradorResponse",
+    "LoginRequest",
+    "TokenResponse",
     "ClienteCreate", 
     "ClienteResponse",
     "EmpleadoCreate",

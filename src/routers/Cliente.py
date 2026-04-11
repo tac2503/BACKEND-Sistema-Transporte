@@ -1,12 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from src.core.security import get_current_admin
+from src.core.utils import hash_password
 from src.schemas import ClienteResponse, ClienteCreate
 from src.database.config import get_db
 from src.models import Cliente
 
 router = APIRouter(
     prefix="/clientes",
-    tags=["clientes"])
+    tags=["clientes"],
+    dependencies=[Depends(get_current_admin)])
 
 @router.post(
     "/", response_model=ClienteResponse, status_code=status.HTTP_201_CREATED
@@ -20,6 +23,7 @@ def create_cliente(cliente: ClienteCreate, db: Session = Depends(get_db)):
     
     nuevo_cliente = Cliente(
         documento=cliente.documento,
+        contrasena=hash_password(cliente.contrasena),
         nombre=cliente.nombre,
         email=cliente.email,
         telefono=cliente.telefono,

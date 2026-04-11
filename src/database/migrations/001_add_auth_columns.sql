@@ -1,0 +1,5 @@
+ALTER TABLE administradores
+ADD COLUMN IF NOT EXISTS contrasena VARCHAR(255);
+
+ALTER TABLE clientes
+ADD COLUMN IF NOT EXISTS contrasena VARCHAR(255);
