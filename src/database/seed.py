@@ -1,7 +1,4 @@
 from dotenv import load_dotenv
-
-load_dotenv()
-
 from sqlalchemy.exc import OperationalError
 
 from src.database.config import SessionLocal
@@ -11,8 +8,9 @@ from src.models.Tipo_Empleado import Tipo_Empleado
 from src.models.Rutas import Ruta
 from src.models.Vehiculos import Vehiculo
 from src.models.Cliente import Cliente
-
 from src.core.utils import hash_password
+
+load_dotenv()
 
 
 ADMINISTRADOR = [
