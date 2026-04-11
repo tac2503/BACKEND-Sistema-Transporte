@@ -7,7 +7,7 @@ from src.routers.Tipo_Empleado import router as tipo_empleado_router
 from src.routers.Vehiculos import router as vehiculos_router
 from src.routers.Rutas import router as rutas_router
 
-__all__=[
+__all__ = [
     "administradores_router",
     "auth_router",
     "cliente_router",
@@ -15,5 +15,5 @@ __all__=[
     "tarjeta_router",
     "tipo_empleado_router",
     "vehiculos_router",
-    "rutas_router"
+    "rutas_router",
 ]

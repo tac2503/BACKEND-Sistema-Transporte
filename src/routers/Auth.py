@@ -15,7 +15,9 @@ from src.schemas import LoginRequest, TokenResponse
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/login/admin", response_model=TokenResponse, status_code=status.HTTP_200_OK)
+@router.post(
+    "/login/admin", response_model=TokenResponse, status_code=status.HTTP_200_OK
+)
 def login_admin(data: LoginRequest, db: Session = Depends(get_db)):
     """Autentica un administrador y retorna un token JWT."""
     admin = authenticate_admin(db, data.documento, data.contrasena)
@@ -35,7 +37,9 @@ def login_admin(data: LoginRequest, db: Session = Depends(get_db)):
     }
 
 
-@router.post("/login/cliente", response_model=TokenResponse, status_code=status.HTTP_200_OK)
+@router.post(
+    "/login/cliente", response_model=TokenResponse, status_code=status.HTTP_200_OK
+)
 def login_cliente(data: LoginRequest, db: Session = Depends(get_db)):
     """Autentica un cliente y retorna un token JWT."""
     cliente = authenticate_cliente(db, data.documento, data.contrasena)
