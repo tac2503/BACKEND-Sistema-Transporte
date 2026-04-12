@@ -19,7 +19,7 @@ def create_vehiculo(vehiculo: VehiculoCreate, db: Session = Depends(get_db)):
     if exists:
         raise ConflictError(
             message="El vehículo con esa placa ya está registrado.",
-            details={"placa": vehiculo.placa}
+            details={"placa": vehiculo.placa},
         )
 
     nuevo_vehiculo = Vehiculo(
@@ -44,8 +44,7 @@ def get_vehiculo(placa: str, db: Session = Depends(get_db)):
     vehiculo = db.query(Vehiculo).filter(Vehiculo.placa == placa).first()
     if not vehiculo:
         raise NotFoundError(
-            message="El vehículo no fue encontrado.",
-            details={"placa": placa}
+            message="El vehículo no fue encontrado.", details={"placa": placa}
         )
     return vehiculo
 
@@ -56,8 +55,7 @@ def delete_vehiculo(placa: str, db: Session = Depends(get_db)):
     vehiculo = db.query(Vehiculo).filter(Vehiculo.placa == placa).first()
     if not vehiculo:
         raise NotFoundError(
-            message="El vehículo no fue encontrado.",
-            details={"placa": placa}
+            message="El vehículo no fue encontrado.", details={"placa": placa}
         )
     db.delete(vehiculo)
     db.commit()

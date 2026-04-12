@@ -22,6 +22,6 @@ async def app_exception_handler(request: Request, exc: AppException) -> JSONResp
             }
         },
     )
-    if hasattr(exc, 'headers') and exc.headers:
+    if hasattr(exc, "headers") and exc.headers:
         response.headers.update(exc.headers)
     return response

@@ -80,7 +80,11 @@ class ValidationError(AppException):
 class UnauthorizedError(AppException):
     """Acceso no autorizado (401)."""
 
-    def __init__(self, message: str = "Credenciales inválidas", details: dict | list | None = None):
+    def __init__(
+        self,
+        message: str = "Credenciales inválidas",
+        details: dict | list | None = None,
+    ):
         super().__init__(
             message=message,
             status_code=status.HTTP_401_UNAUTHORIZED,

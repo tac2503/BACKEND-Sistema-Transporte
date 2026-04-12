@@ -20,7 +20,7 @@ def create_cliente(cliente: ClienteCreate, db: Session = Depends(get_db)):
     if exists:
         raise ConflictError(
             message="El documento ya está registrado.",
-            details={"documento": cliente.documento}
+            details={"documento": cliente.documento},
         )
 
     nuevo_cliente = Cliente(
@@ -52,8 +52,7 @@ def get_cliente(documento: str, db: Session = Depends(get_db)):
     cliente = db.query(Cliente).filter(Cliente.documento == documento).first()
     if not cliente:
         raise NotFoundError(
-            message="El cliente no fue encontrado.",
-            details={"documento": documento}
+            message="El cliente no fue encontrado.", details={"documento": documento}
         )
     return cliente
 
@@ -64,8 +63,7 @@ def delete_cliente(documento: str, db: Session = Depends(get_db)):
     cliente = db.query(Cliente).filter(Cliente.documento == documento).first()
     if not cliente:
         raise NotFoundError(
-            message="El cliente no fue encontrado.",
-            details={"documento": documento}
+            message="El cliente no fue encontrado.", details={"documento": documento}
         )
     db.delete(cliente)
     db.commit()
