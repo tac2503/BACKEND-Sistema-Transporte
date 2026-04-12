@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from src.core.security import get_current_admin
 from src.schemas import VehiculoResponse, VehiculoCreate
 from src.database.config import get_db
 from src.models import Vehiculo
+from src.core.exceptions import ConflictError, NotFoundError
 
 router = APIRouter(
     prefix="/vehiculos", tags=["vehiculos"], dependencies=[Depends(get_current_admin)]
@@ -16,9 +17,9 @@ def create_vehiculo(vehiculo: VehiculoCreate, db: Session = Depends(get_db)):
 
     exists = db.query(Vehiculo).filter(Vehiculo.placa == vehiculo.placa).first()
     if exists:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="El vehículo con esa placa ya está registrado.",
+        raise ConflictError(
+            message="El vehículo con esa placa ya está registrado.",
+            details={"placa": vehiculo.placa}
         )
 
     nuevo_vehiculo = Vehiculo(
@@ -42,9 +43,9 @@ def get_vehiculo(placa: str, db: Session = Depends(get_db)):
     """Obtiene un vehiculo especifico por su placa."""
     vehiculo = db.query(Vehiculo).filter(Vehiculo.placa == placa).first()
     if not vehiculo:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="El vehículo no fue encontrado.",
+        raise NotFoundError(
+            message="El vehículo no fue encontrado.",
+            details={"placa": placa}
         )
     return vehiculo
 
@@ -54,9 +55,9 @@ def delete_vehiculo(placa: str, db: Session = Depends(get_db)):
     """Elimina un vehiculo existente por placa."""
     vehiculo = db.query(Vehiculo).filter(Vehiculo.placa == placa).first()
     if not vehiculo:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="El vehículo no fue encontrado.",
+        raise NotFoundError(
+            message="El vehículo no fue encontrado.",
+            details={"placa": placa}
         )
     db.delete(vehiculo)
     db.commit()

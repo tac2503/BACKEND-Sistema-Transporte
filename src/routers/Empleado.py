@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from src.core.security import get_current_admin
 from src.schemas import EmpleadoResponse, EmpleadoCreate
 from src.database.config import get_db
 from src.models import Empleado
+from src.core.exceptions import NotFoundError, ConflictError
 
 router = APIRouter(
     prefix="/empleados", tags=["empleados"], dependencies=[Depends(get_current_admin)]
@@ -16,10 +17,7 @@ def create_empleado(empleado: EmpleadoCreate, db: Session = Depends(get_db)):
 
     exists = db.query(Empleado).filter(Empleado.documento == empleado.documento).first()
     if exists:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="El documento ya está registrado.",
-        )
+        raise ConflictError(message="El documento ya está registrado.")
 
     nuevo_empleado = Empleado(
         documento=empleado.documento,
@@ -49,10 +47,7 @@ def get_empleado(documento: str, db: Session = Depends(get_db)):
     """Busca un empleado por documento."""
     empleado = db.query(Empleado).filter(Empleado.documento == documento).first()
     if not empleado:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="El empleado no fue encontrado.",
-        )
+        raise NotFoundError(message="El empleado no fue encontrado.")
     return empleado
 
 
@@ -61,10 +56,7 @@ def delete_empleado(documento: str, db: Session = Depends(get_db)):
     """Elimina un empleado por documento si existe."""
     empleado = db.query(Empleado).filter(Empleado.documento == documento).first()
     if not empleado:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="El empleado no fue encontrado.",
-        )
+        raise NotFoundError(message="El empleado no fue encontrado.")
     db.delete(empleado)
     db.commit()
     return {"detail": "El empleado fue eliminado."}
