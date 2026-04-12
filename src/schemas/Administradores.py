@@ -10,6 +10,7 @@ class AdministradorCreate(BaseModel):
     email: EmailStr = Field(..., example="hola@gmail.com")
     telefono: str = Field(..., example="1234567890")
     direccion: str = Field(..., example="Calle Falsa 123")
+    descripcion: str | None = Field(None, example="Administrador principal del sistema")
 
 
 class AdministradorResponse(BaseModel):
@@ -20,6 +21,7 @@ class AdministradorResponse(BaseModel):
     email: EmailStr
     telefono: str
     direccion: str
+    descripcion: str | None
 
     class Config:
         from_attributes = True

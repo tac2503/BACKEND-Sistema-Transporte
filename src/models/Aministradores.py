@@ -19,3 +19,4 @@ class Administrador(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     telefono = Column(String, nullable=False)
     direccion = Column(String, nullable=False)
+    descripcion = Column(String, nullable=True)

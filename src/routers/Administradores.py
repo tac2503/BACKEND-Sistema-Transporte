@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from src.schemas import AdministradorResponse, AdministradorCreate
 from src.core.security import get_current_admin
 from src.core.utils import hash_password
 from src.database.config import get_db
 from src.models import Administrador
+from src.core.exceptions import NotFoundError, ConflictError
 
 router = APIRouter(prefix="/administradores", tags=["administradores"])
 
@@ -23,10 +24,7 @@ def create_administrador(
         .first()
     )
     if exists:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="El documento ya está registrado.",
-        )
+        raise ConflictError(message="El documento ya está registrado.")
     nuevo_administrador = Administrador(
         documento=administrador.documento,
         contrasena=hash_password(administrador.contrasena),
@@ -34,6 +32,7 @@ def create_administrador(
         email=administrador.email,
         telefono=administrador.telefono,
         direccion=administrador.direccion,
+        descripcion=administrador.descripcion,
     )
     db.add(nuevo_administrador)
     db.commit()
@@ -64,10 +63,7 @@ def delete_administrador(
         db.query(Administrador).filter(Administrador.documento == documento).first()
     )
     if not administrador:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="El administrador no fue encontrado.",
-        )
+        raise NotFoundError(message="El administrador no fue encontrado.")
     db.delete(administrador)
     db.commit()
     return {"detail": "El administrador fue eliminado."}
