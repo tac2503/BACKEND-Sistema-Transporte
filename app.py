@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from src.database.config import create_tables
 from src.routers import auth_router, administradores_router, tarjeta_router, tipo_empleado_router, vehiculos_router, cliente_router, empleado_router, rutas_router
+from src.core.handlers import app_exception_handler
+from src.core.exceptions import AppException
 import uvicorn
 
 @asynccontextmanager
@@ -16,6 +18,8 @@ app = FastAPI(
     redoc_url="/redoc", 
     lifespan=lifespan
 )
+
+app.add_exception_handler(AppException, app_exception_handler)
 
 app.include_router(auth_router)
 app.include_router(administradores_router)

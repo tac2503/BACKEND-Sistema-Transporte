@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from src.core.security import get_current_admin
 from src.core.utils import hash_password
 from src.schemas import ClienteResponse, ClienteCreate
 from src.database.config import get_db
 from src.models import Cliente
+from src.core.exceptions import ConflictError, NotFoundError
 
 router = APIRouter(
     prefix="/clientes", tags=["clientes"], dependencies=[Depends(get_current_admin)]
@@ -17,9 +18,9 @@ def create_cliente(cliente: ClienteCreate, db: Session = Depends(get_db)):
 
     exists = db.query(Cliente).filter(Cliente.documento == cliente.documento).first()
     if exists:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="El documento ya está registrado.",
+        raise ConflictError(
+            message="El documento ya está registrado.",
+            details={"documento": cliente.documento},
         )
 
     nuevo_cliente = Cliente(
@@ -50,9 +51,8 @@ def get_cliente(documento: str, db: Session = Depends(get_db)):
     """Obtiene un cliente por su numero de documento."""
     cliente = db.query(Cliente).filter(Cliente.documento == documento).first()
     if not cliente:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="El cliente no fue encontrado.",
+        raise NotFoundError(
+            message="El cliente no fue encontrado.", details={"documento": documento}
         )
     return cliente
 
@@ -62,9 +62,8 @@ def delete_cliente(documento: str, db: Session = Depends(get_db)):
     """Elimina un cliente existente identificado por documento."""
     cliente = db.query(Cliente).filter(Cliente.documento == documento).first()
     if not cliente:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="El cliente no fue encontrado.",
+        raise NotFoundError(
+            message="El cliente no fue encontrado.", details={"documento": documento}
         )
     db.delete(cliente)
     db.commit()

@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from src.core.security import get_current_admin
 from src.schemas import Tipo_EmpleadoResponse, Tipo_EmpleadoCreate
 from src.database.config import get_db
 from src.models import Tipo_Empleado
+from src.core.exceptions import NotFoundError, ConflictError
 
 router = APIRouter(
     prefix="/tipos-empleados",
@@ -26,10 +27,7 @@ def create_tipo_empleado(
         .first()
     )
     if exists:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="El tipo de empleado ya está registrado.",
-        )
+        raise ConflictError(message="El tipo de empleado ya está registrado.")
 
     nuevo_tipo_empleado = Tipo_Empleado(nombre_Tipo=tipo_empleado.nombre_Tipo)
     db.add(nuevo_tipo_empleado)
@@ -58,10 +56,7 @@ def get_tipo_empleado(tipo_empleado_id: int, db: Session = Depends(get_db)):
         db.query(Tipo_Empleado).filter(Tipo_Empleado.id == tipo_empleado_id).first()
     )
     if not tipo_empleado:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="El tipo de empleado no fue encontrado.",
-        )
+        raise NotFoundError(message="El tipo de empleado no fue encontrado.")
     return tipo_empleado
 
 
@@ -72,10 +67,7 @@ def delete_tipo_empleado(tipo_empleado_id: int, db: Session = Depends(get_db)):
         db.query(Tipo_Empleado).filter(Tipo_Empleado.id == tipo_empleado_id).first()
     )
     if not tipo_empleado:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="El tipo de empleado no fue encontrado.",
-        )
+        raise NotFoundError(message="El tipo de empleado no fue encontrado.")
     db.delete(tipo_empleado)
     db.commit()
     return {"detail": "El tipo de empleado fue eliminado."}

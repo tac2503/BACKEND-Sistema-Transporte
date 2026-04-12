@@ -21,6 +21,7 @@ ADMINISTRADOR = [
         "email": "tomasac@gmail.com",
         "telefono": "3135819710",
         "direccion": "Calle 103c#72-17",
+        "descripcion": "Administrador principal del sistema",
     }
 ]
 

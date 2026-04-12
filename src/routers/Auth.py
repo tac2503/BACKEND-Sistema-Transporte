@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from src.core.config import ACCESS_TOKEN_EXPIRE_MINUTES
@@ -10,6 +10,7 @@ from src.core.security import (
 )
 from src.database.config import get_db
 from src.schemas import LoginRequest, TokenResponse
+from src.core.exceptions import UnauthorizedError
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -22,11 +23,7 @@ def login_admin(data: LoginRequest, db: Session = Depends(get_db)):
     """Autentica un administrador y retorna un token JWT."""
     admin = authenticate_admin(db, data.documento, data.contrasena)
     if not admin:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Credenciales inválidas.",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise UnauthorizedError()
 
     token = create_access_token(subject=admin.documento, role="admin")
     return {
@@ -44,11 +41,7 @@ def login_cliente(data: LoginRequest, db: Session = Depends(get_db)):
     """Autentica un cliente y retorna un token JWT."""
     cliente = authenticate_cliente(db, data.documento, data.contrasena)
     if not cliente:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Credenciales inválidas.",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise UnauthorizedError()
 
     token = create_access_token(subject=cliente.documento, role="cliente")
     return {

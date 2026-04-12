@@ -45,7 +45,7 @@ def run_sql_file(conn, path: Path):
     for stmt in statements:
         if stmt:
             conn.execute(text(stmt))
-    conn.commit()
+            conn.commit()  # Commit after each statement for DDL operations
 
 
 def run_pending_migrations(conn):
