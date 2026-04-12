@@ -32,6 +32,7 @@ def create_administrador(
         email=administrador.email,
         telefono=administrador.telefono,
         direccion=administrador.direccion,
+        descripcion=administrador.descripcion,
     )
     db.add(nuevo_administrador)
     db.commit()
