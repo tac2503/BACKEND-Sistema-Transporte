@@ -2,7 +2,7 @@
 Manejadores de excepciones para la API.
 """
 
-from fastapi import Request, status
+from fastapi import Request
 from fastapi.responses import JSONResponse
 from .exceptions import AppException
 
