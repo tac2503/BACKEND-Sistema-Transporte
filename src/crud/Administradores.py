@@ -8,6 +8,7 @@ def crear_administrador(
     email: str,
     telefono: str,
     direccion: str,
+    descripcion: str | None = None,
 ):
     """Consume el endpoint para crear un administrador."""
     payload = {
@@ -17,5 +18,6 @@ def crear_administrador(
         "email": email,
         "telefono": telefono,
         "direccion": direccion,
+        "descripcion": descripcion,
     }
     return _post("/administradores/", json=payload)

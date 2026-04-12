@@ -58,10 +58,18 @@ def _delete(url: str, **kwargs) -> None:
 def login_admin(documento: str, contrasena: str) -> dict:
     """Autentica un administrador contra /auth/login/admin."""
     payload = {"documento": documento, "contrasena": contrasena}
-    return _post("/auth/login/admin", json=payload)
+    with httpx.Client(base_url=BASE_URL, timeout=30.0, follow_redirects=True) as client:
+        r = client.post("/auth/login/admin", json=payload, **_merge_headers({}))
+        if r.status_code == 204:
+            return {}
+        return r.json()
 
 
 def login_cliente(documento: str, contrasena: str) -> dict:
     """Autentica un cliente contra /auth/login/cliente."""
     payload = {"documento": documento, "contrasena": contrasena}
-    return _post("/auth/login/cliente", json=payload)
+    with httpx.Client(base_url=BASE_URL, timeout=30.0, follow_redirects=True) as client:
+        r = client.post("/auth/login/cliente", json=payload, **_merge_headers({}))
+        if r.status_code == 204:
+            return {}
+        return r.json()

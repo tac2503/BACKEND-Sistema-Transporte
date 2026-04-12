@@ -1,0 +1,2 @@
+ALTER TABLE administradores 
+ADD COLUMN IF NOT EXISTS descripcion VARCHAR(255);

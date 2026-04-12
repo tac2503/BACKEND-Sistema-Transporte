@@ -59,6 +59,12 @@ def solicitar_login():
                 print("Opción no válida.")
                 continue
 
+            # Verificar si hay error en la respuesta
+            if "error" in respuesta:
+                error_info = respuesta["error"]
+                print(f"Error de autenticación: {error_info['message']}")
+                continue
+
             token = respuesta.get("access_token")
             role = respuesta.get("role")
             if not token or not role:
@@ -94,13 +100,23 @@ def menu(role: str):
 
             match admin_opcion:
                 case "1":
+                    documento = input("Documento: ")
+                    contrasena = input("Contraseña: ")
+                    nombre = input("Nombre: ")
+                    email = input("Email: ")
+                    telefono = input("Teléfono: ")
+                    direccion = input("Dirección: ")
+                    descripcion = input("Descripción (opcional, presione Enter para omitir): ").strip()
+                    descripcion = descripcion if descripcion else None
+                    
                     admin_nuevo = crear_administrador(
-                        documento=input("Documento: "),
-                        contrasena=input("Contraseña: "),
-                        nombre=input("Nombre: "),
-                        email=input("Email: "),
-                        telefono=input("Teléfono: "),
-                        direccion=input("Dirección: "),
+                        documento=documento,
+                        contrasena=contrasena,
+                        nombre=nombre,
+                        email=email,
+                        telefono=telefono,
+                        direccion=direccion,
+                        descripcion=descripcion,
                     )
                     print(f"Administrador creado: {admin_nuevo}")
                 case "2":
