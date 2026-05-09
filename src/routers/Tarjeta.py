@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body, Depends, status
 from sqlalchemy.orm import Session
 from src.core.security import get_current_admin
+from src.core.audit import registrar_auditoria
 from src.schemas import TarjetaResponse, TarjetaCreate
 from src.database.config import get_db
 from src.models import Tarjeta
@@ -28,6 +29,7 @@ def create_tarjeta(tarjeta: TarjetaCreate, db: Session = Depends(get_db)):
     db.add(nueva_tarjeta)
     db.commit()
     db.refresh(nueva_tarjeta)
+    registrar_auditoria(db, "tarjetas", "crear")
     return nueva_tarjeta
 
 
@@ -35,6 +37,7 @@ def create_tarjeta(tarjeta: TarjetaCreate, db: Session = Depends(get_db)):
 def get_tarjetas(db: Session = Depends(get_db)):
     """Obtiene todas las tarjetas registradas en la base de datos."""
     tarjetas = db.query(Tarjeta).all()
+    registrar_auditoria(db, "tarjetas", "obtener")
     return tarjetas
 
 
@@ -46,6 +49,7 @@ def get_tarjeta(numero_tarjeta: str, db: Session = Depends(get_db)):
     tarjeta = db.query(Tarjeta).filter(Tarjeta.numero_tarjeta == numero_tarjeta).first()
     if not tarjeta:
         raise NotFoundError(message="La tarjeta no fue encontrada.")
+    registrar_auditoria(db, "tarjetas", "obtener")
     return tarjeta
 
 
@@ -57,6 +61,7 @@ def delete_tarjeta(numero_tarjeta: str, db: Session = Depends(get_db)):
         raise NotFoundError(message="La tarjeta no fue encontrada.")
     db.delete(tarjeta)
     db.commit()
+    registrar_auditoria(db, "tarjetas", "eliminar")
     return {"detail": "La tarjeta fue eliminada."}
 
 
@@ -73,4 +78,5 @@ def actualizar_saldo(
     tarjeta.saldo += monto
     db.commit()
     db.refresh(tarjeta)
+    registrar_auditoria(db, "tarjetas", "actualizar")
     return tarjeta.saldo

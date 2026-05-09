@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from src.core.security import get_current_admin
+from src.core.audit import registrar_auditoria
 from src.schemas import VehiculoResponse, VehiculoCreate
 from src.database.config import get_db
 from src.models import Vehiculo
@@ -28,6 +29,7 @@ def create_vehiculo(vehiculo: VehiculoCreate, db: Session = Depends(get_db)):
     db.add(nuevo_vehiculo)
     db.commit()
     db.refresh(nuevo_vehiculo)
+    registrar_auditoria(db, "vehiculos", "crear")
     return nuevo_vehiculo
 
 
@@ -35,6 +37,7 @@ def create_vehiculo(vehiculo: VehiculoCreate, db: Session = Depends(get_db)):
 def get_vehiculos(db: Session = Depends(get_db)):
     """Obtiene todos los vehiculos registrados en el sistema."""
     vehiculos = db.query(Vehiculo).all()
+    registrar_auditoria(db, "vehiculos", "obtener")
     return vehiculos
 
 
@@ -46,6 +49,7 @@ def get_vehiculo(placa: str, db: Session = Depends(get_db)):
         raise NotFoundError(
             message="El vehículo no fue encontrado.", details={"placa": placa}
         )
+    registrar_auditoria(db, "vehiculos", "obtener")
     return vehiculo
 
 
@@ -59,4 +63,5 @@ def delete_vehiculo(placa: str, db: Session = Depends(get_db)):
         )
     db.delete(vehiculo)
     db.commit()
+    registrar_auditoria(db, "vehiculos", "eliminar")
     return {"detail": "El vehículo fue eliminado."}
