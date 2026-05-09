@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from src.schemas import AdministradorResponse, AdministradorCreate
 from src.core.security import get_current_admin
+from src.core.audit import registrar_auditoria
 from src.core.utils import hash_password
 from src.database.config import get_db
 from src.models import Administrador
@@ -37,6 +38,7 @@ def create_administrador(
     db.add(nuevo_administrador)
     db.commit()
     db.refresh(nuevo_administrador)
+    registrar_auditoria(db, "administradores", "crear")
     return nuevo_administrador
 
 
@@ -49,6 +51,7 @@ def get_administradores(
 ):
     """Obtiene todos los administradores de la base de datos."""
     administradores = db.query(Administrador).all()
+    registrar_auditoria(db, "administradores", "obtener")
     return administradores
 
 
@@ -66,4 +69,5 @@ def delete_administrador(
         raise NotFoundError(message="El administrador no fue encontrado.")
     db.delete(administrador)
     db.commit()
+    registrar_auditoria(db, "administradores", "eliminar")
     return {"detail": "El administrador fue eliminado."}
