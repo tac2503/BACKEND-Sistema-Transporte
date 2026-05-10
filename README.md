@@ -4,6 +4,10 @@ Sistema de informacion para la gestion de un sistema de transporte publico.
 
 El proyecto expone una API con FastAPI y tambien incluye un menu por consola para consumir la API en modo cliente/administrador.
 
+## Video
+
+Enlace al video explicativo: [https://example.com/video-explicativo](https://youtu.be/cHr6kj0vJOs)
+
 ## Tecnologias
 
 - Python 3.11+
@@ -84,6 +88,9 @@ Crea un archivo `.env` en la raiz del proyecto con:
 
 ```env
 DATABASE_URL=postgresql+psycopg2://USUARIO:CLAVE@localhost:5432/NOMBRE_BD
+JWT_SECRET_KEY= jwt_secret_key
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+JWT_ALGORITHM=HS256
 ```
 
 Nota: Esta URL se saca directamente desde NEON.
