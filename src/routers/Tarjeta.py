@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Body, Depends, status
 from sqlalchemy.orm import Session
-
 from src.core.audit import registrar_auditoria
 from src.core.exceptions import ConflictError, NotFoundError
 from src.core.security import get_current_admin, get_current_cliente

@@ -30,6 +30,7 @@ def crear_ruta(
     db.add(nueva_ruta)
     db.commit()
     db.refresh(nueva_ruta)
+    registrar_auditoria(db, "rutas", "crear")
     return nueva_ruta
 
 
@@ -37,6 +38,7 @@ def crear_ruta(
 def get_rutas(db: Session = Depends(get_db), admin=Depends(get_current_admin)):
     """Lista todas las rutas registradas."""
     rutas = db.query(Ruta).all()
+    registrar_auditoria(db, "rutas", "obtener")
     return rutas
 
 
@@ -81,4 +83,5 @@ def delete_ruta(
         raise NotFoundError(message="La ruta no fue encontrada.")
     db.delete(ruta)
     db.commit()
+    registrar_auditoria(db, "rutas", "eliminar")
     return {"detail": "La ruta fue eliminada."}

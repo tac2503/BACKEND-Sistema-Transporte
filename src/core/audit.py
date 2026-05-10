@@ -1,3 +1,10 @@
-def registrar_auditoria(db, tabla: str, accion: str) -> None:
-    """Registro mínimo de auditoría para evitar fallos de importación en el arranque."""
-    return None
+from sqlalchemy.orm import Session
+
+from src.models import Auditoria
+
+
+def registrar_auditoria(db: Session, tabla: str, accion: str) -> None:
+    """Guarda un evento de auditoria en la base de datos."""
+
+    db.add(Auditoria(tabla=tabla, accion=accion))
+    db.commit()
