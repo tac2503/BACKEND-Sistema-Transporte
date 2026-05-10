@@ -55,9 +55,31 @@ def login_cliente(data: LoginRequest, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=TokenResponse, status_code=status.HTTP_200_OK)
-def login_compat(data: LoginRequest, db: Session = Depends(get_db)):
-    """Compatibilidad: mantiene /auth/login para administradores."""
-    return login_admin(data, db)
+def login(data: LoginRequest, db: Session = Depends(get_db)):
+    """Detecta si el usuario es administrador o cliente y retorna el token adecuado."""
+    admin = authenticate_admin(db, data.documento, data.contrasena)
+    if admin:
+        token = create_access_token(subject=admin.documento, role="admin")
+        registrar_auditoria(db, "auth", "login")
+        return {
+            "access_token": token,
+            "token_type": "bearer",
+            "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+            "role": "admin",
+        }
+
+    cliente = authenticate_cliente(db, data.documento, data.contrasena)
+    if cliente:
+        token = create_access_token(subject=cliente.documento, role="cliente")
+        registrar_auditoria(db, "auth", "login")
+        return {
+            "access_token": token,
+            "token_type": "bearer",
+            "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+            "role": "cliente",
+        }
+
+    raise UnauthorizedError()
 
 
 @router.get("/me", status_code=status.HTTP_200_OK)
