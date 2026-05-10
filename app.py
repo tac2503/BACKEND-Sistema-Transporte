@@ -1,22 +1,50 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from src.database.config import create_tables
-from src.routers import auth_router, administradores_router, tarjeta_router, tipo_empleado_router, vehiculos_router, cliente_router, empleado_router, rutas_router
+from src.database import seed
+from src.routers import (
+    auth_router,
+    administradores_router,
+    tarjeta_router,
+    tipo_empleado_router,
+    vehiculos_router,
+    cliente_router,
+    empleado_router,
+    rutas_router,
+)
 from src.core.handlers import app_exception_handler
 from src.core.exceptions import AppException
 import uvicorn
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Ejecuta tareas de inicio y cierre del ciclo de vida de la API."""
     create_tables()
+    seed.main()
     yield
+
 
 app = FastAPI(
     title="Sistema de Transporte API",
-    version="1.0.0",docs_url="/docs",
-    redoc_url="/redoc", 
-    lifespan=lifespan
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:4200",
+        "http://127.0.0.1:4200",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.add_exception_handler(AppException, app_exception_handler)
@@ -29,6 +57,7 @@ app.include_router(tarjeta_router)
 app.include_router(tipo_empleado_router)
 app.include_router(vehiculos_router)
 app.include_router(rutas_router)
+
 
 def desplegar_uvicorn():
     """Inicia el servidor Uvicorn para exponer la API localmente."""
