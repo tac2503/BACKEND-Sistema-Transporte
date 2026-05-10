@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from src.database.config import create_tables
+from src.database import seed
 from src.routers import (
     auth_router,
     administradores_router,
@@ -21,6 +22,7 @@ import uvicorn
 async def lifespan(app: FastAPI):
     """Ejecuta tareas de inicio y cierre del ciclo de vida de la API."""
     create_tables()
+    seed.main()
     yield
 
 
