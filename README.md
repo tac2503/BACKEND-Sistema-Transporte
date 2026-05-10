@@ -2,7 +2,15 @@
 
 Sistema de informacion para la gestion de un sistema de transporte publico.
 
-El proyecto expone una API con FastAPI y tambien incluye un menu por consola para consumir la API en modo cliente/administrador.
+El proyecto combina:
+
+- API REST con FastAPI.
+- Autenticacion JWT (roles: `admin` y `cliente`).
+- Menu interactivo por consola para consumir la API localmente.
+
+## VIDEO DEL PROYECTO
+https://canva.link/pxgg5d8ivricwjz
+
 
 ## Tecnologias
 
@@ -12,20 +20,136 @@ El proyecto expone una API con FastAPI y tambien incluye un menu por consola par
 - PostgreSQL (via `psycopg2-binary`)
 - Uvicorn
 - HTTPX
+- PyJWT
+- bcrypt
 
 ## Estructura General
 
 - `app.py`: configura FastAPI, registra routers y crea tablas al iniciar.
-- `main.py`: inicia el servidor y muestra el menu interactivo en consola.
+- `main.py`: levanta el servidor y muestra el menu interactivo (login + operaciones).
 - `src/models/`: modelos SQLAlchemy.
 - `src/schemas/`: esquemas Pydantic.
 - `src/routers/`: endpoints REST.
 - `src/crud/`: cliente HTTP para consumir la API desde `main.py`.
-- `src/database/config.py`: conexion a base de datos y sesion SQLAlchemy.
+- `src/database/config.py`: conexion y sesion SQLAlchemy.
+- `src/database/migrate.py`: aplica migraciones SQL pendientes.
+- `src/database/seed.py`: crea datos base para desarrollo.
 
-## Opciones Disponibles En El Menu
+## Modulos De API
 
-Al ejecutar `main.py`, se habilitan dos perfiles: administrador y cliente.
+Prefijos principales registrados en FastAPI:
+
+- `/auth`
+- `/administradores`
+- `/clientes`
+- `/empleados`
+- `/tarjetas`
+- `/tipos-empleados`
+- `/vehiculos`
+- `/rutas`
+
+Consulta interactiva de contratos y ejemplos en:
+
+- Swagger: `http://127.0.0.1:8000/docs`
+- ReDoc: `http://127.0.0.1:8000/redoc`
+
+## Requisitos Previos
+
+- Python 3.11 o superior
+- PostgreSQL disponible
+- `pip` actualizado
+
+## Configuracion Local
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/tac2503/BACKEND-Sistema-Transporte.git
+cd BACKEND-Sistema-Transporte
+```
+
+### 2. Crear y activar entorno virtual
+
+Windows (PowerShell):
+
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+```
+
+
+
+### 3. Instalar dependencias
+
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 4. Configurar variables de entorno
+
+Crea un archivo `.env` en la raiz del proyecto:
+
+```env
+DATABASE_URL=postgresql+psycopg2://USUARIO:CLAVE@localhost:5432/NOMBRE_BD
+JWT_SECRET_KEY=una_clave_larga_y_segura
+JWT_ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+
+Variables obligatorias:
+
+- `DATABASE_URL`
+- `JWT_SECRET_KEY`
+
+Variables opcionales (con valor por defecto):
+
+- `JWT_ALGORITHM` (`HS256`)
+- `ACCESS_TOKEN_EXPIRE_MINUTES` (`30`)
+
+### 5. Inicializar base de datos (recomendado)
+
+```bash
+python -m src.database.migrate
+python -m src.database.seed
+```
+
+Esto crea/actualiza tablas, aplica migraciones de `src/database/migrations/` y carga datos base para pruebas locales.
+
+## Ejecucion
+
+### Opcion recomendada: API + menu interactivo
+
+```bash
+python main.py
+```
+
+Expone:
+
+- API: `http://127.0.0.1:8000`
+- Swagger: `http://127.0.0.1:8000/docs`
+- ReDoc: `http://127.0.0.1:8000/redoc`
+
+### Solo API
+
+```bash
+uvicorn app:app --host 127.0.0.1 --port 8000 --reload
+```
+
+## Autenticacion y uso del menu
+
+Al iniciar `main.py`, primero se solicita login.
+
+- Login administrador: `POST /auth/login/admin`
+- Login cliente: `POST /auth/login/cliente`
+- Perfil token actual: `GET /auth/me`
+
+Si ejecutas el seed, puedes usar estas credenciales de desarrollo:
+
+- Admin: documento `1021923966`, contrasena `Admin123!`
+- Cliente: documento `12345678`, contrasena `cliente_seguro123`
+
+## Opciones disponibles en consola
 
 ### Administrador
 
@@ -44,77 +168,49 @@ Al ejecutar `main.py`, se habilitan dos perfiles: administrador y cliente.
 
 ### Cliente
 
-1. Registrarse como cliente
-2. Ver tarjeta asociada
-3. Recargar tarjeta (actualizar saldo)
-4. Consultar saldo
-5. Ver rutas disponibles
-6. Ver vehiculos disponibles
-7. Salir
+1. Ver tarjeta asociada
+2. Recargar tarjeta
+3. Consultar saldo
+4. Ver rutas disponibles
+5. Ver vehiculos disponibles
+6. Salir
 
-## Ejecucion Local
+## Verificaciones Rapidas
 
-### 1. Clonar y entrar al proyecto
+Smoke test de documentacion:
 
 ```bash
-git clone https://github.com/tac2503/BACKEND-Sistema-Transporte.git
-cd BACKEND-Sistema-Transporte
+python smoke_test.py
 ```
 
-### 2. Crear entorno virtual
-
-En Windows (PowerShell):
+En Windows PowerShell tambien puedes usar:
 
 ```powershell
-python -m venv venv
-.\.venv\Scripts\Activate.ps1
+.\run_smoke_test.ps1
 ```
 
-
-
-### 3. Instalar dependencias
+Validacion de workflow CI:
 
 ```bash
-pip install -r requirements.txt
+python validate_workflow.py
 ```
 
-### 4. Configurar variables de entorno
+## CI
 
-Crea un archivo `.env` en la raiz del proyecto con:
+El workflow de GitHub Actions (`.github/workflows/ci_push.yml`) en rama `dev` ejecuta:
 
-```env
-DATABASE_URL=postgresql+psycopg2://USUARIO:CLAVE@localhost:5432/NOMBRE_BD
-```
-
-Nota: Esta URL se saca directamente desde NEON.
-
-### 5. Ejecutar el proyecto
-
-Opcion recomendada para usar menu + API:
-
-```bash
-python main.py
-```
-
-Esto levanta:
-
-- API: `http://127.0.0.1:8000`
-- Swagger: `http://127.0.0.1:8000/docs`
-- ReDoc: `http://127.0.0.1:8000/redoc`
-
-## Ejecucion Solo API (opcional)
-
-Si solo quieres levantar la API:
-
-```bash
-uvicorn app:app --host 127.0.0.1 --port 8000 --reload
-```
+- Lint y formato con Ruff
+- Auditoria de dependencias (`pip-audit`)
+- Migracion de base de datos
+- Seed de datos
+- Smoke test de FastAPI
 
 ## Notas
 
-- Las tablas se crean automaticamente al iniciar la API (en `lifespan` con `create_tables()`).
-- El menu de `main.py` consume la API por HTTP en `http://localhost:8000`.
+- La API crea tablas al iniciar (`lifespan` en `app.py`) y adicionalmente soporta migraciones SQL versionadas.
+- El cliente HTTP de consola usa `http://localhost:8000` como base URL.
 
-## Desarrollado por:
- - Tomás Álvarez Castillo
- - Miguel Angel Mejía
+## Desarrollado por
+
+- Tomas Alvarez Castillo
+- Miguel Angel Mejia

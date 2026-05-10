@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from src.core.security import get_current_admin
+from src.core.audit import registrar_auditoria
 from src.schemas import EmpleadoResponse, EmpleadoCreate
 from src.database.config import get_db
 from src.models import Empleado
@@ -30,6 +31,7 @@ def create_empleado(empleado: EmpleadoCreate, db: Session = Depends(get_db)):
     db.add(nuevo_empleado)
     db.commit()
     db.refresh(nuevo_empleado)
+    registrar_auditoria(db, "empleados", "crear")
     return nuevo_empleado
 
 
@@ -37,6 +39,7 @@ def create_empleado(empleado: EmpleadoCreate, db: Session = Depends(get_db)):
 def get_empleados(db: Session = Depends(get_db)):
     """Retorna todos los empleados registrados."""
     empleados = db.query(Empleado).all()
+    registrar_auditoria(db, "empleados", "obtener")
     return empleados
 
 
@@ -48,6 +51,7 @@ def get_empleado(documento: str, db: Session = Depends(get_db)):
     empleado = db.query(Empleado).filter(Empleado.documento == documento).first()
     if not empleado:
         raise NotFoundError(message="El empleado no fue encontrado.")
+    registrar_auditoria(db, "empleados", "obtener")
     return empleado
 
 
@@ -59,4 +63,5 @@ def delete_empleado(documento: str, db: Session = Depends(get_db)):
         raise NotFoundError(message="El empleado no fue encontrado.")
     db.delete(empleado)
     db.commit()
+    registrar_auditoria(db, "empleados", "eliminar")
     return {"detail": "El empleado fue eliminado."}
