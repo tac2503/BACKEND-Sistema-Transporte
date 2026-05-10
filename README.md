@@ -12,6 +12,10 @@ El proyecto combina:
 https://canva.link/pxgg5d8ivricwjz
 
 
+## Video
+
+Enlace al video explicativo: [https://example.com/video-explicativo](https://youtu.be/cHr6kj0vJOs)
+
 ## Tecnologias
 
 - Python 3.11+
@@ -199,11 +203,44 @@ python validate_workflow.py
 
 El workflow de GitHub Actions (`.github/workflows/ci_push.yml`) en rama `dev` ejecuta:
 
+<<<<<<< HEAD
+```env
+DATABASE_URL=postgresql+psycopg2://USUARIO:CLAVE@localhost:5432/NOMBRE_BD
+JWT_SECRET_KEY= jwt_secret_key
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+JWT_ALGORITHM=HS256
+```
+
+Nota: Esta URL se saca directamente desde NEON.
+
+### 5. Ejecutar el proyecto
+
+Opcion recomendada para usar menu + API:
+
+```bash
+python main.py
+```
+
+Esto levanta:
+
+- API: `http://127.0.0.1:8000`
+- Swagger: `http://127.0.0.1:8000/docs`
+- ReDoc: `http://127.0.0.1:8000/redoc`
+
+## Ejecucion Solo API (opcional)
+
+Si solo quieres levantar la API:
+
+```bash
+uvicorn app:app --host 127.0.0.1 --port 8000 --reload
+```
+=======
 - Lint y formato con Ruff
 - Auditoria de dependencias (`pip-audit`)
 - Migracion de base de datos
 - Seed de datos
 - Smoke test de FastAPI
+>>>>>>> 82b2ae68c35d9748242b2ce97727b09043164458
 
 ## Notas
 
