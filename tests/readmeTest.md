@@ -4,6 +4,10 @@ Este documento explica **qué son** estas pruebas, **para qué sirven**, **cómo
 
 ---
 
+## VIDEO FINAL PRUEBAS Y DESPLIEGUE
+https://canva.link/27j41tpjk35yufs
+
+
 ## 1. Concepto: ¿qué es una “prueba automatizada”?
 
 Una **prueba automatizada** es un programa que **ejecuta tu aplicación** y **comprueba** que el comportamiento coincide con lo esperado (respuesta HTTP, JSON, cabeceras, reglas de seguridad).
