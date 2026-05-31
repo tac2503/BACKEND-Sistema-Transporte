@@ -11,7 +11,10 @@ El proyecto combina:
 ## VIDEO FINAL PRUEBAS Y DESPLIEGUE
 https://canva.link/27j41tpjk35yufs
 
+## Despliegue
 
+- Backend: https://backend-sistema-transporte.onrender.com/docs#/
+- Frontend: https://miguemjia.github.io/FRONTEND-Sistema-Transporte/login
 
 
 ## Tecnologias
