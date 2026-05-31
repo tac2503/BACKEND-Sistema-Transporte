@@ -8,13 +8,11 @@ El proyecto combina:
 - Autenticacion JWT (roles: `admin` y `cliente`).
 - Menu interactivo por consola para consumir la API localmente.
 
-## VIDEO DEL PROYECTO
-https://canva.link/pxgg5d8ivricwjz
+## VIDEO FINAL PRUEBAS Y DESPLIEGUE
+https://canva.link/27j41tpjk35yufs
 
 
-## Video
 
-Enlace al video explicativo: [https://example.com/video-explicativo](https://youtu.be/cHr6kj0vJOs)
 
 ## Tecnologias
 
